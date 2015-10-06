@@ -10,6 +10,7 @@
   "license": "GPLv3",
   "dependencies": {
     "async": "^1.4.2",
+    "express": "^4.13.3",
     "github": "^0.2.4",
     "underscore": "^1.8.3"
   }

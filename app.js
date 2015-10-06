@@ -7,6 +7,7 @@ const max_events = 20;
 
 var GitHubApi = require("github");
 var async = require("async");
+var express = require("express");
 var _ = require("underscore");
 const GitHubOauthToken = process.env.GITHUB_OAUTH_TOKEN;
 
@@ -30,30 +31,42 @@ function byCreationTime(a, b) {
     return a.created_at < b.created_at ? 1 : -1;
 }
 
-github.orgs.getMembers({ 
-    org: "Xebia",
-    per_page: max_users
-}, function(error, members) {
-    if (error) {
-        console.log("Error fetching members: ", error);
-        return;
-    }
+function member_events(member, callback) {
+    github.events.getFromUser({
+        user: member.login,
+        per_page: max_events
+    }, callback);
+}
 
-    async.map(members,
-        function(member, callback){
-            github.events.getFromUser({
-                user: member.login,
-                per_page: max_events
-            }, callback);
-        },
-        function(err, eventss) {
-            _.flatten(eventss)
+function organization_member_events(organization, callback) {
+    github.orgs.getMembers({
+        org: organization,
+        per_page: max_users
+    }, function(error, members) {
+        if (error) {
+            callback(error);
+            return;
+        }
+
+        async.map(members, member_events, function(err, eventss) {
+            callback(null, _.flatten(eventss)
              .sort(byCreationTime)
-             .slice(0, max_events)
-             .forEach(function(event){
-                var repo = "n/a";
-                if (event.repo) repo = event.repo.name;
-                console.log(event.created_at, event.actor.login, event.type, repo);
-            });
+             .slice(0, max_events))
         });
+    });
+};
+
+const app = express();
+app.get('/', function(req, res) {
+  res.send('<a href="http://github.com/raboof/github-ticker.js">github-ticker</a>');
+});
+app.get('/orgs/Xebia/member_events', function(req, res) {
+    organization_member_events('Xebia', function(error, events) {
+        if (error) res.send('Error: ' + error);
+        else res.send(events);
+    });
+})
+
+const server = app.listen(process.env.PORT, function() {
+  console.log('Listening on %s:%s', server.address().address, server.address().port);
 });
