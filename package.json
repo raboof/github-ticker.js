@@ -1,0 +1,11 @@
+{
+  "name": "github-ticker",
+  "version": "0.0.0",
+  "description": "Show public activity of users part of an organization",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Arnout Engelen",
+  "license": "GPLv3"
+}
