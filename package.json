@@ -7,5 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Arnout Engelen",
-  "license": "GPLv3"
+  "license": "GPLv3",
+  "dependencies": {
+    "async": "^1.4.2",
+    "github": "^0.2.4",
+    "underscore": "^1.8.3"
+  }
 }
