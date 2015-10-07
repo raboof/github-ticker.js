@@ -8,3 +8,5 @@ organisation.
 
 Uses a slightly modified version of http://caseyscarborough.com/github-activity/ 
 for the UI.
+
+Demo: http://github-ticker.herokuapp.com
