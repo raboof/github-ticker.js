@@ -1,0 +1,14 @@
+{
+  "name": "GitHub Ticker",
+  "description": "Show an overview of recent public github activity of the members of an organization",
+  "repository": "https://github.com/raboof/github-ticker.js",
+  "env": {
+    "GITHUB_OAUTH_TOKEN": {
+      "description": "A github personal OAuth access token. Only public access is needed."
+    },
+    "GITHUB_ORG": {
+      "description": "GitHub organization to show an overview for.",
+      "required": false
+    }
+  }
+}
