@@ -5,11 +5,14 @@
 const max_users = 100;
 const max_events = 20;
 
-var GitHubApi = require("github");
-var async = require("async");
-var express = require("express");
-var _ = require("underscore");
+var GitHubApi = require('github');
+var async = require('async');
+var express = require('express');
+var mustacheExpress = require('mustache-express');
+var _ = require('underscore');
+
 const GitHubOauthToken = process.env.GITHUB_OAUTH_TOKEN;
+const organization = process.env.GITHUB_ORG || 'Xebia';
 
 var github = new GitHubApi({
     version: "3.0.0",
@@ -57,12 +60,21 @@ function organization_member_events(organization, callback) {
 };
 
 const app = express();
-app.get('/orgs/Xebia/member_events', function(req, res) {
-    organization_member_events('Xebia', function(error, events) {
+app.get('/orgs/' + organization + '/member_events', function(req, res) {
+    organization_member_events(organization, function(error, events) {
         if (error) res.send('Error: ' + error);
         else res.send(events);
     });
 })
+
+app.engine('mustache', mustacheExpress());
+app.set('view engine', 'mustache');
+app.set('views', __dirname + '/views')
+app.get('/', function(req, res) {
+    res.render('index', {
+        'organization': organization
+    });
+});
 app.use(express.static(__dirname + '/static'));
 
 const server = app.listen(process.env.PORT, function() {
