@@ -57,9 +57,6 @@ function organization_member_events(organization, callback) {
 };
 
 const app = express();
-//app.get('/', function(req, res) {
-//  res.send('<a href="http://github.com/raboof/github-ticker.js">github-ticker</a>');
-//});
 app.get('/orgs/Xebia/member_events', function(req, res) {
     organization_member_events('Xebia', function(error, events) {
         if (error) res.send('Error: ' + error);
