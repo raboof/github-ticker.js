@@ -4,7 +4,7 @@
 // If you need more, add pagination :)
 const max_users = 100;
 
-var GitHubApi = require('github');
+var GitHubApi = require('github-cache');
 var async = require('async');
 var express = require('express');
 var mustacheExpress = require('mustache-express');
@@ -22,7 +22,9 @@ var github = new GitHubApi({
     timeout: 5000,
     headers: {
         "user-agent": "GitHub-Ticker"
-    }
+    },
+    cachedb: './cachedb',
+    validateCache: true
 });
 github.authenticate({
     type: "oauth",
