@@ -3,7 +3,6 @@
 // Currently works for organisations of up to 100 users
 // If you need more, add pagination :)
 const max_users = 100;
-const max_events = 20;
 
 var GitHubApi = require('github');
 var async = require('async');
@@ -37,11 +36,10 @@ function byCreationTime(a, b) {
 function member_events(member, callback) {
     github.events.getFromUser({
         user: member.login,
-        per_page: max_events
     }, callback);
 }
 
-function organization_member_events(organization, callback) {
+function organization_member_events(organization, max_events, callback) {
     github.orgs.getMembers({
         org: organization,
         per_page: max_users
@@ -54,14 +52,14 @@ function organization_member_events(organization, callback) {
         async.map(members, member_events, function(err, eventss) {
             callback(null, _.flatten(eventss)
              .sort(byCreationTime)
-             .slice(0, max_events))
+             .slice(0, max_events || 30))
         });
     });
 };
 
 const app = express();
 app.get('/orgs/' + organization + '/member_events', function(req, res) {
-    organization_member_events(organization, function(error, events) {
+    organization_member_events(organization, req.query.per_page, function(error, events) {
         if (error) res.send('Error: ' + error);
         else res.send(events);
     });
