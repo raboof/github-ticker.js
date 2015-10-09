@@ -37,15 +37,15 @@ function byCreationTime(a, b) {
 
 function member_events(member, callback) {
     github.events.getFromUser({
-        user: member.login,
-        validateCache: false
+        user: member.login
     }, callback);
 }
 
 function organization_member_events(organization, max_events, callback) {
     github.orgs.getMembers({
         org: organization,
-        per_page: max_users
+        per_page: max_users,
+        validateCache: false
     }, function(error, members) {
         if (error) {
             callback(error);
