@@ -38,6 +38,7 @@ function byCreationTime(a, b) {
 function member_events(member, callback) {
     github.events.getFromUser({
         user: member.login,
+        validateCache: false
     }, callback);
 }
 
