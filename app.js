@@ -64,7 +64,14 @@ const app = express();
 app.get('/orgs/' + organization + '/member_events', function(req, res) {
     organization_member_events(organization, req.query.per_page, function(error, events) {
         if (error) res.send('Error: ' + error);
-        else res.send(events);
+        else {
+          var allowedOrigins = ['http://github-ticker.s3-website-eu-west-1.amazonaws.com', 'http://pi.bzzt.net'];
+          var origin = req.headers.origin;
+          if (origin && allowedOrigins.indexOf(origin) > -1) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+          }
+          res.send(events);
+        }
     });
 })
 
