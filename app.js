@@ -65,7 +65,10 @@ app.get('/orgs/' + organization + '/member_events', function(req, res) {
     organization_member_events(organization, req.query.per_page, function(error, events) {
         if (error) res.send('Error: ' + error);
         else {
-          res.setHeader('Access-Control-Allow-Origin', 'http://github-ticker.s3-website-eu-west-1.amazonaws.com');
+          var allowedOrigins = ['http://github-ticker.s3-website-eu-west-1.amazonaws.com', 'http://pi.bzzt.net'];
+          if (allowedOrigins.indexOf(req.headers.origin) > -1) {
+            res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+          }
           res.send(events);
         }
     });
