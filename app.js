@@ -68,6 +68,8 @@ app.get('/orgs/' + organization + '/member_events', function(req, res) {
           var allowedOrigins = ['http://github-ticker.s3-website-eu-west-1.amazonaws.com', 'http://pi.bzzt.net'];
           if (allowedOrigins.indexOf(req.headers.origin) > -1) {
             res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+          } else {
+            res.setHeader('Access-Control-No-Allow-Origin', req.headers.origin);
           }
           res.send(events);
         }
